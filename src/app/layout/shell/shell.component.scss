@@ -13,10 +13,35 @@
 }
 
 .sidebar-brand {
-  color: #fff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  //color: #fff;
+  //font-weight: 700;
+  //font-size: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e3e8ef;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+  width: 60px;
+  // La imagen tiene mucho margen blanco arriba y abajo:
+  // este recorte 4:3 lo elimina sin deformar el logo.
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+}
+
+.brand-name {
+  color: #1b4f80;
   font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 28px;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .sidebar-label {
@@ -79,7 +104,7 @@
 }
 
 .topbar {
-  height: 60px;
+  height: 80px;
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
   display: flex;
