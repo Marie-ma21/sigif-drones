@@ -44,3 +44,4 @@ __screenshots__/
 Thumbs.db
 # Ocultar la configuración real de Supabase
 src/config/supabase.config.ts
+src/app/core/config/supabase.config.ts
