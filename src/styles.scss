@@ -1,1 +1,43 @@
 /* You can add global styles to this file, and also import other style files */
+/* Estilos globales SIGIF-Drones */
+
+:root {
+  /* Paleta tomada del mockup de Figma (CU-08) */
+  --sidebar-bg: #1b1f27;
+  --sidebar-bg-active: #2a2f3a;
+  --sidebar-text: #c7ccd6;
+  --sidebar-text-active: #ffffff;
+
+  --brand-blue: #1565c0;
+  --brand-blue-dark: #0a2e52;
+
+  --bg-app: #f3f5f8;
+  --bg-card: #ffffff;
+  --border: #e1e5ec;
+  --text-main: #1b2230;
+  --text-muted: #5b6472;
+
+  /* Semáforo de disponibilidad */
+  --verde-bg: #2e7d32;
+  --verde-soft: #e8f5e9;
+  --amarillo-bg: #b98a00;
+  --amarillo-soft: #fff8e1;
+  --rojo-bg: #c62828;
+  --rojo-soft: #fdecea;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: var(--bg-app);
+  color: var(--text-main);
+}
+
+button {
+  font-family: inherit;
+}

@@ -1,0 +1,180 @@
+<div class="page">
+  <div class="page-kicker">CU-08 · RF-08 · HU02 · Regla de negocio RN-01</div>
+  <h1>Disponibilidad Técnica de la Flota</h1>
+  <p class="subtitle">
+    El sistema inhabilita automáticamente la asignación de misiones a drones con
+    mantenimiento vencido o certificación no vigente.
+  </p>
+
+  @if (estadoPantalla() === 'cargando') {
+    <p class="loading">Cargando flota…</p>
+  } @else {
+    <!-- KPIs -->
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-num">{{ kpis().total }}</div>
+        <div class="kpi-label">Drones en la flota</div>
+      </div>
+      <div class="kpi verde">
+        <div class="kpi-num">{{ kpis().verde }}</div>
+        <div class="kpi-label">Habilitados</div>
+      </div>
+      <div class="kpi amarillo">
+        <div class="kpi-num">{{ kpis().amarillo }}</div>
+        <div class="kpi-label">Próx. mantenimiento</div>
+      </div>
+      <div class="kpi rojo">
+        <div class="kpi-num">{{ kpis().rojo }}</div>
+        <div class="kpi-label">Bloqueados</div>
+      </div>
+    </div>
+
+    <div class="grid-main">
+      <!-- Tabla de flota -->
+      <section class="card fleet-card">
+        <h2>Flota de Aeronaves</h2>
+        <p class="hint">Selecciona un dron para ver el detalle y asignarlo a una misión.</p>
+
+        <table class="fleet-table">
+          <thead>
+            <tr>
+              <th>Dron</th>
+              <th>Horas de vida útil</th>
+              <th>Certificado</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (d of drones(); track d.id) {
+              <tr
+                [class.selected]="d.id === dronSeleccionadoId()"
+                (click)="seleccionarDron(d.id)"
+              >
+                <td>
+                  <div class="dron-codigo">{{ d.codigo }}</div>
+                  <div class="dron-modelo">{{ d.modelo }}</div>
+                </td>
+                <td class="horas-cell">
+                  <div class="barra">
+                    <div
+                      class="barra-rellena"
+                      [class]="d.estado.toLowerCase()"
+                      [style.width.%]="porcentajeHoras(d)"
+                    ></div>
+                  </div>
+                  <span class="horas-texto">{{ d.horas_vuelo }}h / {{ d.limite_horas }}h</span>
+                </td>
+                <td>
+                  @if (d.certificado_vigente) {
+                    <span class="cert ok">✓ Vigente</span>
+                  } @else {
+                    <span class="cert vencido">✗ Vencido</span>
+                  }
+                </td>
+                <td>
+                  <span class="badge" [class]="d.estado.toLowerCase()">
+                    {{ etiquetaEstado(d.estado) }}
+                  </span>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Asignación -->
+      <section class="card assign-card">
+        <h2>Asignación de Dron a Misión</h2>
+
+        @if (dronSeleccionado(); as dron) {
+          <div class="dron-resumen">
+            <div class="dron-resumen-codigo">{{ dron.codigo }}</div>
+            <div class="dron-resumen-modelo">{{ dron.modelo }}</div>
+          </div>
+
+          <label class="field">
+            <span>Misión</span>
+            <select
+              [ngModel]="misionSeleccionadaId()"
+              (ngModelChange)="misionSeleccionadaId.set($event); alCambiarMision()"
+            >
+              @for (m of misiones(); track m.id) {
+                <option [value]="m.id">{{ m.codigo_mision }} — {{ m.nombre }}</option>
+              }
+            </select>
+          </label>
+
+          <h3>Semáforo de Disponibilidad</h3>
+
+          <div class="semaforo" [class]="dron.estado.toLowerCase()">
+            <span class="icon">
+              @if (dron.estado === 'ROJO' || dron.estado === 'AMARILLO') { ⚠ }
+              @else { ✓ }
+            </span>
+            {{ textoSemaforo() }}
+          </div>
+
+          <button
+            class="btn-asignar"
+            [disabled]="estaBloqueado() || asignando()"
+            (click)="asignar()"
+          >
+            @if (estaBloqueado()) { 🔒 }
+            {{ asignando() ? 'Asignando...' : 'Asignar Dron a Misión' }}
+          </button>
+
+          @if (estaBloqueado()) {
+            <p class="help-text blocked">{{ textoAyudaBloqueo() }}</p>
+          }
+
+          @if (mensajeError()) {
+            <p class="help-text blocked">⛔ {{ mensajeError() }}</p>
+          }
+
+          @if (mensajeExito()) {
+            <p class="help-text ok">✅ {{ mensajeExito() }}</p>
+          }
+
+          <hr />
+
+          <button class="btn-secundario" (click)="notificarMantenimiento()">
+            ✉ Notificar a Área de Mantenimiento
+          </button>
+
+          @if (notificado()) {
+            <p class="help-text ok">Notificación enviada al área de mantenimiento.</p>
+          }
+        }
+      </section>
+    </div>
+
+    <!-- Historial -->
+    <section class="card history-card">
+      <h2>Historial de Asignaciones</h2>
+      <p class="hint">Trazabilidad de las últimas misiones asignadas (RF-13).</p>
+
+      @if (historial().length) {
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Dron</th>
+              <th>Misión</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (h of historial(); track h.id) {
+              <tr>
+                <td>{{ h.fecha_asignacion | date: 'dd/MM/yyyy HH:mm' }}</td>
+                <td>{{ h.drones?.codigo }}</td>
+                <td>{{ h.misiones?.codigo_mision }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="hint">Todavía no se han registrado asignaciones.</p>
+      }
+    </section>
+  }
+</div>

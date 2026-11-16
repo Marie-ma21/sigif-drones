@@ -1,0 +1,144 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background: #ffffff;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+}
+
+.sidebar-brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 28px;
+}
+
+.sidebar-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #000000;
+  margin-bottom: 10px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: block;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #000000;
+  opacity: 0.85;
+  cursor: pointer;
+
+  &.disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  &.active,
+  &:hover:not(.disabled) {
+    background: #767e8c;
+    color: var(--sidebar-text-active);
+  }
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  border-top: 1px solid #000000;
+  padding-top: 14px;
+  font-size: 11.5px;
+
+  .label {
+    color: #000000;
+  }
+
+  .value {
+    color: #000000;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  height: 60px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.role-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--brand-blue);
+  color: #fff;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-text {
+  line-height: 1.2;
+}
+
+.role-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.role-rol {
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.logout {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-left: 6px;
+
+  &:hover {
+    color: var(--rojo-bg);
+  }
+}
+
+.content {
+  flex: 1;
+  padding: 28px 32px;
+}

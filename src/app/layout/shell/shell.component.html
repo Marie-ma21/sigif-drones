@@ -1,0 +1,43 @@
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">SIGIF-Drones</div>
+
+    <div class="sidebar-label">Módulos</div>
+    <nav class="sidebar-nav">
+      @for (m of modulos; track m.nombre) {
+        @if (m.ruta) {
+          <a
+            class="nav-item"
+            [routerLink]="m.ruta"
+            routerLinkActive="active"
+          >{{ m.nombre }}</a>
+        } @else {
+          <span class="nav-item disabled" title="Próximamente">{{ m.nombre }}</span>
+        }
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="label">Instalación activa</div>
+      <div class="value">Complejo industrial Norte</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="spacer"></div>
+      <div class="role-badge">
+        <span class="dot">{{ etiquetaRol().charAt(0) }}</span>
+        <div class="role-text">
+          <div class="role-name">{{ auth.profile()?.nombre_completo || 'Usuario' }}</div>
+          <div class="role-rol">{{ etiquetaRol() }}</div>
+        </div>
+        <button class="logout" (click)="salir()" title="Cerrar sesión">⎋</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </div>
+</div>
