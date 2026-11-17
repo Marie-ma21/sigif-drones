@@ -1,0 +1,121 @@
+<div class="page">
+  <div class="page-kicker">CU-03 · RF-03 · HU06 · Operador de drones</div>
+  <h1>Mis solicitudes de misión</h1>
+  <p class="subtitle">
+    Consulte el estado de sus solicitudes. Las misiones en zonas de alta tensión solo pueden enviarse a la
+    GCS cuando el Coordinador de Operaciones las aprueba con su firma digital.
+  </p>
+
+  @if (estadoPantalla() === 'cargando') {
+    <p class="loading">Cargando solicitudes…</p>
+  } @else {
+    @if (errorCarga()) {
+      <p class="help-text blocked" role="alert">⛔ {{ errorCarga() }}</p>
+    }
+
+    @for (n of notificaciones(); track n.id) {
+      <div class="notificacion" role="status">
+        <span>🔔 {{ n.mensaje }}</span>
+        <button type="button" (click)="marcarLeida(n)">Entendido</button>
+      </div>
+    }
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-num">{{ kpis().total }}</div>
+        <div class="kpi-label">Solicitudes</div>
+      </div>
+      <div class="kpi amarillo">
+        <div class="kpi-num">{{ kpis().pendientes }}</div>
+        <div class="kpi-label">Pendientes de aprobación</div>
+      </div>
+      <div class="kpi verde">
+        <div class="kpi-num">{{ kpis().aprobadas }}</div>
+        <div class="kpi-label">Aprobadas</div>
+      </div>
+      <div class="kpi azul">
+        <div class="kpi-num">{{ kpis().enviadas }}</div>
+        <div class="kpi-label">Enviadas a la GCS</div>
+      </div>
+    </div>
+
+    <section class="card">
+      <div class="card-cabecera">
+        <div>
+          <h2>Solicitudes registradas</h2>
+          <p class="hint">Las más recientes aparecen primero.</p>
+        </div>
+        <a class="btn-nueva" routerLink="/operador/solicitar-mision">+ Nueva solicitud</a>
+      </div>
+
+      @if (solicitudes().length) {
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Misión</th>
+              <th>Dron y tarea</th>
+              <th>Inicio</th>
+              <th>Estado</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of solicitudes(); track s.id) {
+              <tr>
+                <td>
+                  <div class="codigo">{{ s.codigo }}</div>
+                  <div class="detalle">{{ s.titulo }}</div>
+                  @if (s.zona_critica) {
+                    <span class="etiqueta-critica">Alta tensión</span>
+                  }
+                </td>
+                <td>
+                  <div>{{ s.tipo_dron }}</div>
+                  <div class="detalle">{{ s.tipo_tarea }}</div>
+                </td>
+                <td>{{ s.fecha_inicio }} {{ s.hora_inicio.slice(0, 5) }}</td>
+                <td>
+                  <span class="badge" [class]="claseEstado(s.estado)">{{ etiquetaEstado(s.estado) }}</span>
+                  @if (s.estado === 'RECHAZADA' && s.motivo_rechazo) {
+                    <div class="detalle">{{ s.motivo_rechazo }}</div>
+                  }
+                  @if (s.aprobada_en) {
+                    <div class="detalle">Firmada el {{ s.aprobada_en | date: 'dd/MM/yyyy HH:mm' }}</div>
+                  }
+                </td>
+                <td class="celda-accion">
+                  @if (s.estado === 'ENVIADA_GCS') {
+                    <span class="detalle">Enviada el {{ s.enviada_gcs_en | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  } @else if (s.estado !== 'CANCELADA') {
+                    <button
+                      type="button"
+                      class="btn-gcs"
+                      [class.bloqueado]="estaBloqueada(s)"
+                      [attr.aria-disabled]="estaBloqueada(s)"
+                      [disabled]="enviandoId() === s.id"
+                      (click)="enviarAGcs(s)"
+                    >
+                      @if (estaBloqueada(s)) { 🔒 }
+                      {{ enviandoId() === s.id ? 'Enviando...' : 'Enviar a GCS' }}
+                    </button>
+                  }
+                </td>
+              </tr>
+              @if (mensajes()[s.id]; as m) {
+                <tr class="fila-mensaje">
+                  <td colspan="5">
+                    <p class="help-text" [class.blocked]="m.tipo === 'bloqueo'" [class.ok]="m.tipo === 'ok'">
+                      {{ m.tipo === 'bloqueo' ? '⛔' : '✅' }} {{ m.texto }}
+                    </p>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="hint">Todavía no ha registrado solicitudes.</p>
+      }
+    </section>
+  }
+</div>

@@ -1,0 +1,30 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>1. Datos del solicitante</h2>
+  <p class="form-sub">Persona que opera o responde por la misión.</p>
+
+  <div class="form-grid">
+    <app-campo etiqueta="Nombre completo" para="sol-nombre" [control]="group().controls['nombre']">
+      <input id="sol-nombre" class="campo-input" type="text" formControlName="nombre" placeholder="Nombre y apellidos" />
+    </app-campo>
+
+    <app-campo etiqueta="Documento de identidad" para="sol-doc" [control]="group().controls['documento']">
+      <input id="sol-doc" class="campo-input" type="text" formControlName="documento" placeholder="Número de documento" />
+    </app-campo>
+
+    <app-campo etiqueta="Correo electrónico" para="sol-correo" [control]="group().controls['correo']">
+      <input id="sol-correo" class="campo-input" type="email" formControlName="correo" placeholder="operador@sigif.com" />
+    </app-campo>
+
+    <app-campo etiqueta="Teléfono" para="sol-tel" [control]="group().controls['telefono']">
+      <input id="sol-tel" class="campo-input" type="tel" formControlName="telefono" placeholder="Número de contacto" />
+    </app-campo>
+
+    <app-campo etiqueta="Licencia o certificación de operador" para="sol-lic" [control]="group().controls['licencia']">
+      <input id="sol-lic" class="campo-input" type="text" formControlName="licencia" placeholder="Número de licencia" />
+    </app-campo>
+
+    <app-campo etiqueta="Área o dependencia" para="sol-area" [control]="group().controls['area']">
+      <input id="sol-area" class="campo-input" type="text" formControlName="area" placeholder="Área que solicita" />
+    </app-campo>
+  </div>
+</section>

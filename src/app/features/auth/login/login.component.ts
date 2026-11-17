@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { rutaInicial } from '../../../core/services/ruta-inicial';
+
 
 @Component({
   selector: 'app-login',
@@ -33,15 +35,25 @@ export class LoginComponent {
     this.error.set(null);
 
     const { email, password } = this.form.getRawValue();
-    const { error } = await this.auth.iniciarSesion(email, password);
+
+    // 1. Desestructuramos las tres propiedades que devuelve AuthService
+    const { error, rol, sinPerfil } = await this.auth.iniciarSesion(email, password);
 
     this.cargando.set(false);
 
+    // 2. Evaluamos si el usuario no tiene perfil asignado
+    if (sinPerfil) {
+      this.error.set('Su usuario no tiene un perfil con rol asignado. Contacte al administrador.');
+      return;
+    }
+
+    // 3. Evaluamos si hubo error de credenciales
     if (error) {
       this.error.set('Correo o contraseña incorrectos.');
       return;
     }
 
-    this.router.navigateByUrl('/misiones/asignacion');
+    // 4. Redirigimos según el rol obtenido
+    this.router.navigateByUrl(rutaInicial(rol!));
   }
 }

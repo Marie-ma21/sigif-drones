@@ -1,0 +1,47 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>2. Misión</h2>
+  <p class="form-sub">Qué se va a hacer y cuándo.</p>
+
+  <div class="form-grid">
+    <app-campo class="col-2" etiqueta="Título de la misión" para="mis-titulo" [control]="group().controls['titulo']">
+      <input id="mis-titulo" class="campo-input" type="text" formControlName="titulo" placeholder="Resumen breve de la misión" />
+    </app-campo>
+
+    <app-campo class="col-2" etiqueta="Tipo de tarea" para="mis-tarea" [control]="group().controls['tipoTarea']">
+      <select id="mis-tarea" class="campo-input" formControlName="tipoTarea">
+        <option value="" disabled>Seleccione una tarea</option>
+        @for (t of tiposTarea; track t) {
+          <option [value]="t">{{ t }}</option>
+        }
+      </select>
+    </app-campo>
+
+    <fieldset class="col-2 campo-grupo">
+      <legend class="campo-etiqueta">Prioridad</legend>
+      <div class="fila-opciones">
+        @for (p of prioridades; track p.valor) {
+          <label class="opcion">
+            <input type="radio" formControlName="prioridad" [value]="p.valor" />
+            {{ p.etiqueta }}
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <app-campo class="col-2" etiqueta="Descripción del objetivo" para="mis-desc" [control]="group().controls['descripcion']">
+      <textarea id="mis-desc" class="campo-area" formControlName="descripcion" placeholder="Qué se debe inspeccionar y qué resultado se espera"></textarea>
+    </app-campo>
+
+    <app-campo etiqueta="Fecha de inicio" para="mis-fecha" [control]="group().controls['fechaInicio']">
+      <input id="mis-fecha" class="campo-input" type="date" formControlName="fechaInicio" />
+    </app-campo>
+
+    <app-campo etiqueta="Hora de inicio" para="mis-hora" [control]="group().controls['horaInicio']">
+      <input id="mis-hora" class="campo-input" type="time" formControlName="horaInicio" />
+    </app-campo>
+
+    <app-campo etiqueta="Duración estimada (min)" para="mis-dur" [control]="group().controls['duracionMin']">
+      <input id="mis-dur" class="campo-input" type="number" formControlName="duracionMin" placeholder="Minutos" />
+    </app-campo>
+  </div>
+</section>

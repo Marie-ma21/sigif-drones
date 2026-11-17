@@ -1,0 +1,90 @@
+<div class="page">
+  <div class="page-kicker">CU-03 · RF-03 · HU06 · Operador de drones</div>
+  <h1>Solicitud de misión</h1>
+  <p class="subtitle">
+    Complete los datos de la misión. Si el vuelo es en una zona de alta tensión, la misión queda
+    pendiente hasta que el Coordinador de Operaciones la apruebe con su firma digital.
+  </p>
+
+  @if (resultado(); as r) {
+    <section class="card resultado" [class.pendiente]="r.estado === 'PENDIENTE_APROBACION'">
+      <h2>Solicitud {{ r.codigo }} registrada</h2>
+      <p class="estado-resultado">
+        <span><strong>Nivel de riesgo:</strong> {{ r.nivel_riesgo }}</span>
+        <span>
+          <strong>Estado:</strong>
+          {{ r.estado === 'PENDIENTE_APROBACION' ? 'Pendiente de aprobación del Coordinador' : 'Aprobada' }}
+        </span>
+      </p>
+      @if (r.estado === 'PENDIENTE_APROBACION') {
+        <p>
+          Se detectó una <strong>zona de alta tensión</strong>. La misión quedó
+          <strong>pendiente de aprobación del Coordinador</strong> y no podrá enviarse a la GCS hasta
+          contar con su firma digital. Recibirá una notificación cuando la firme.
+        </p>
+      } @else {
+        <p>La misión quedó <strong>aprobada</strong> y está lista para enviarse a la GCS.</p>
+      }
+      <div class="acciones">
+        <button type="button" class="btn-secundario" (click)="nuevaSolicitud()">Nueva solicitud</button>
+        <a class="btn-principal enlace" routerLink="/operador/mis-solicitudes">Ver mis solicitudes</a>
+      </div>
+    </section>
+  } @else {
+    <div class="layout">
+      <form class="formulario" [formGroup]="form" (ngSubmit)="enviar()" novalidate>
+        <nav class="pasos" aria-label="Progreso del formulario">
+          <ol>
+            @for (p of pasos; track p.clave; let i = $index) {
+              <li [class.activo]="i === pasoActual()" [class.completo]="i < pasoActual()">
+                <button
+                  type="button"
+                  [disabled]="i > pasoMaximo()"
+                  [attr.aria-current]="i === pasoActual() ? 'step' : null"
+                  (click)="irAPaso(i)"
+                >
+                  <span class="num">{{ i + 1 }}</span>
+                  <span class="titulo-paso">{{ p.titulo }}</span>
+                </button>
+              </li>
+            }
+          </ol>
+        </nav>
+        <p class="paso-texto">Paso {{ pasoActual() + 1 }} de {{ pasos.length }}</p>
+
+        @switch (pasoActual()) {
+          @case (0) { <app-seccion-solicitante [group]="form.controls.solicitante" /> }
+          @case (1) { <app-seccion-mision [group]="form.controls.mision" /> }
+          @case (2) { <app-seccion-ubicacion [group]="form.controls.ubicacion" [altaTension]="altaTension()" /> }
+          @case (3) { <app-seccion-dron [group]="form.controls.dron" /> }
+          @case (4) { <app-seccion-seguridad [group]="form.controls.seguridad" /> }
+          @case (5) {
+            <app-seccion-confirmacion
+              [group]="form.controls.confirmacion"
+              [enviando]="enviando()"
+              (anterior)="anterior()"
+              (cancelar)="nuevaSolicitud()"
+            />
+          }
+        }
+
+        @if (pasoActual() < ultimoPaso) {
+          <div class="acciones">
+            @if (pasoActual() > 0) {
+              <button type="button" class="btn-secundario" (click)="anterior()">Anterior</button>
+            }
+            <button type="button" class="btn-principal btn-siguiente" (click)="siguiente()">Siguiente</button>
+          </div>
+        }
+
+        @if (errorEnvio()) {
+          <div class="error-banner">{{ errorEnvio() }}</div>
+        }
+      </form>
+
+      <aside class="lateral">
+        <app-resumen-solicitud [valor]="valor()" />
+      </aside>
+    </div>
+  }
+</div>

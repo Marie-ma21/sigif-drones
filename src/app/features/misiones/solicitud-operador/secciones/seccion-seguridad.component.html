@@ -1,0 +1,33 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>5. Seguridad y condiciones</h2>
+  <p class="form-sub">Condiciones aceptables para realizar la misión.</p>
+
+  <div class="form-grid">
+    <app-campo
+      etiqueta="Viento máximo aceptable (km/h)"
+      para="seg-viento"
+      [ayuda]="'No se vuela con viento mayor a ' + limiteViento + ' km/h ni con lluvia.'"
+      [control]="group().controls['vientoMaxKmh']"
+    >
+      <input id="seg-viento" class="campo-input" type="number" formControlName="vientoMaxKmh" [placeholder]="'Hasta ' + limiteViento" />
+    </app-campo>
+
+    <app-campo etiqueta="Punto de retorno (RTH)" para="seg-rth" [control]="group().controls['puntoRetorno']">
+      <input id="seg-rth" class="campo-input" type="text" formControlName="puntoRetorno" placeholder="Lugar de retorno al inicio" />
+    </app-campo>
+
+    <app-campo class="col-2" etiqueta="Riesgos conocidos" para="seg-riesgos" [control]="group().controls['riesgos']">
+      <textarea id="seg-riesgos" class="campo-area" formControlName="riesgos" placeholder="Líneas energizadas, tráfico, personas cercanas, relieve u otros"></textarea>
+    </app-campo>
+
+    <div class="col-2">
+      <label class="opcion">
+        <input type="checkbox" formControlName="permisosConfirmados" />
+        Confirmo que cuento con los permisos aeronáuticos vigentes
+      </label>
+      @if (permisosSinMarcar) {
+        <p class="campo-error" role="alert">Debe confirmar los permisos para continuar.</p>
+      }
+    </div>
+  </div>
+</section>

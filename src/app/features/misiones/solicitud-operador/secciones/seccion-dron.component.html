@@ -1,0 +1,41 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>4. Dron y carga útil</h2>
+  <p class="form-sub">Equipo con el que se realizará la tarea.</p>
+
+  <div class="form-grid">
+    <fieldset class="col-2 campo-grupo">
+      <legend class="campo-etiqueta">Tipo de dron</legend>
+      <div class="fila-opciones">
+        @for (t of tiposDron; track t.nombre) {
+          <label class="opcion opcion-dron">
+            <input type="radio" formControlName="tipo" [value]="t.nombre" />
+            <span>
+              <strong>{{ t.nombre }}</strong>
+              <small>{{ t.descripcion }}</small>
+            </span>
+          </label>
+        }
+      </div>
+    </fieldset>
+
+    <app-campo etiqueta="Modelo del dron (opcional)" para="dr-modelo" [control]="group().controls['modelo']">
+      <input id="dr-modelo" class="campo-input" type="text" formControlName="modelo" placeholder="Marca y modelo" />
+    </app-campo>
+
+    <app-campo etiqueta="Número de baterías" para="dr-bat" [control]="group().controls['numBaterias']">
+      <input id="dr-bat" class="campo-input" type="number" formControlName="numBaterias" placeholder="Cantidad" />
+    </app-campo>
+
+    <fieldset class="col-2 campo-grupo">
+      <legend class="campo-etiqueta">Carga útil o sensores</legend>
+      <div class="fila-opciones">
+        @for (c of cargasUtil; track c) {
+          <label class="opcion">
+            <input type="checkbox" [checked]="estaMarcada(c)" (change)="alternarCarga(c, $any($event.target).checked)" />
+            {{ c }}
+          </label>
+        }
+      </div>
+    </fieldset>
+  </div>
+</section>

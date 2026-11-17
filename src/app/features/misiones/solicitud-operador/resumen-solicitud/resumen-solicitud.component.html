@@ -1,0 +1,31 @@
+<section class="card">
+  <h2>Resumen</h2>
+  <dl>
+    <dt>Tipo de dron</dt>
+    <dd>{{ valor().dron.tipo }}</dd>
+
+    <dt>Tipo de tarea</dt>
+    <dd [class.vacio]="!valor().mision.tipoTarea">{{ valor().mision.tipoTarea || 'Sin seleccionar' }}</dd>
+
+    <dt>Prioridad</dt>
+    <dd>{{ valor().mision.prioridad }}</dd>
+
+    <dt>Fecha de inicio</dt>
+    <dd [class.vacio]="!valor().mision.fechaInicio">{{ valor().mision.fechaInicio || 'Sin definir' }}</dd>
+
+    <dt>Nivel de riesgo</dt>
+    <dd [class.alerta]="requiereAprobacion()">{{ requiereAprobacion() ? 'ALTO (Zona de Alta Tensión)' : 'BAJO' }}</dd>
+
+    <dt>Aprobación del Coordinador</dt>
+    <dd [class.alerta]="requiereAprobacion()">{{ requiereAprobacion() ? 'Obligatoria (zona de alta tensión)' : 'No requerida' }}</dd>
+  </dl>
+</section>
+
+<section class="card">
+  <h2>Reglas de seguridad</h2>
+  <ul>
+    <li>Altitud máxima: {{ limiteAltitud }} m.</li>
+    <li>Viento máximo: {{ limiteViento }} km/h y sin lluvia.</li>
+    <li>Zona crítica: no se envía a la GCS sin la aprobación digital del Coordinador.</li>
+  </ul>
+</section>
