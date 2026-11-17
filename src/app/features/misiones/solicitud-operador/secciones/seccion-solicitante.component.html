@@ -3,28 +3,63 @@
   <p class="form-sub">Persona que opera o responde por la misión.</p>
 
   <div class="form-grid">
-    <app-campo etiqueta="Nombre completo" para="sol-nombre" [control]="group().controls['nombre']">
-      <input id="sol-nombre" class="campo-input" type="text" formControlName="nombre" placeholder="Nombre y apellidos" />
+    <app-campo
+      etiqueta="Nombre completo"
+      para="sol-nombre"
+      ayuda="Nombre y apellido, solo letras."
+      [mensajes]="msg.nombre"
+      [control]="group().controls['nombre']"
+    >
+      <input id="sol-nombre" class="campo-input" type="text" formControlName="nombre" maxlength="80" autocomplete="name"/>
     </app-campo>
 
-    <app-campo etiqueta="Documento de identidad" para="sol-doc" [control]="group().controls['documento']">
-      <input id="sol-doc" class="campo-input" type="text" formControlName="documento" placeholder="Número de documento" />
+    <app-campo
+      etiqueta="Documento de identidad"
+      para="sol-doc"
+      ayuda="Solo números, sin puntos (6 a 10 dígitos)."
+      [mensajes]="msg.documento"
+      [control]="group().controls['documento']"
+    >
+      <input id="sol-doc" class="campo-input" type="text" inputmode="numeric" formControlName="documento" maxlength="10" placeholder="Ej.: 1098765432" />
     </app-campo>
 
-    <app-campo etiqueta="Correo electrónico" para="sol-correo" [control]="group().controls['correo']">
-      <input id="sol-correo" class="campo-input" type="email" formControlName="correo" placeholder="operador@sigif.com" />
+    <app-campo
+      etiqueta="Correo electrónico"
+      para="sol-correo"
+      ayuda="Ej.: operador@empresa.com"
+      [mensajes]="msg.correo"
+      [control]="group().controls['correo']"
+    >
+      <input id="sol-correo" class="campo-input" type="email" formControlName="correo" maxlength="100" autocomplete="email" placeholder="Ej.: operador@empresa.com" />
     </app-campo>
 
-    <app-campo etiqueta="Teléfono" para="sol-tel" [control]="group().controls['telefono']">
-      <input id="sol-tel" class="campo-input" type="tel" formControlName="telefono" placeholder="Número de contacto" />
+    <app-campo
+      etiqueta="Teléfono (opcional)"
+      para="sol-tel"
+      ayuda="Celular de 10 dígitos, sin espacios."
+      [mensajes]="msg.telefono"
+      [control]="group().controls['telefono']"
+    >
+      <input id="sol-tel" class="campo-input" type="tel" inputmode="numeric" formControlName="telefono" maxlength="10" placeholder="Ej.: 3001234567" />
     </app-campo>
 
-    <app-campo etiqueta="Licencia o certificación de operador" para="sol-lic" [control]="group().controls['licencia']">
-      <input id="sol-lic" class="campo-input" type="text" formControlName="licencia" placeholder="Número de licencia" />
+    <app-campo
+      etiqueta="Licencia o certificación de operador"
+      para="sol-lic"
+      ayuda="Formato LETRAS-NÚMEROS (2 a 4 letras, guion y 3 a 6 números)."
+      [mensajes]="msg.licencia"
+      [control]="group().controls['licencia']"
+    >
+      <input id="sol-lic" class="campo-input" type="text" formControlName="licencia" maxlength="11" placeholder="Ej.: OP-102" />
     </app-campo>
 
-    <app-campo etiqueta="Área o dependencia" para="sol-area" [control]="group().controls['area']">
-      <input id="sol-area" class="campo-input" type="text" formControlName="area" placeholder="Área que solicita" />
+    <app-campo
+      etiqueta="Área o dependencia (opcional)"
+      para="sol-area"
+      ayuda="Máximo 60 caracteres."
+      [control]="group().controls['area']"
+    >
+      <input id="sol-area" class="campo-input" type="text" formControlName="area" maxlength="60" placeholder="Ej.: Mantenimiento de líneas" />
     </app-campo>
   </div>
 </section>

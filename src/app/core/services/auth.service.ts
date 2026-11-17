@@ -47,12 +47,7 @@ export class AuthService {
     }
     this.cargandoSesion.set(false);
   }
-
-  // async iniciarSesion(email: string, password: string): Promise<{ error: string | null }> {
-  //   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  //   return { error: error?.message ?? null };
-  // }
-
+  
     async iniciarSesion(
     email: string,
     password: string,

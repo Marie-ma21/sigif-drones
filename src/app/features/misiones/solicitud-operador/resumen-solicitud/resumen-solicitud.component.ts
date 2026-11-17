@@ -17,7 +17,6 @@ export class ResumenSolicitudComponent {
   readonly limiteAltitud = LIMITE_ALTITUD_M;
   readonly limiteViento = LIMITE_VIENTO_KMH;
 
-  /** Vista previa: la decisión final siempre la toma el servidor (trigger de la base de datos). */
   readonly requiereAprobacion = computed(
     () => esAltaTension(this.valor().mision.tipoTarea, this.valor().ubicacion.zonaCritica),
   );

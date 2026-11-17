@@ -12,12 +12,12 @@
       <input id="seg-viento" class="campo-input" type="number" formControlName="vientoMaxKmh" [placeholder]="'Hasta ' + limiteViento" />
     </app-campo>
 
-    <app-campo etiqueta="Punto de retorno (RTH)" para="seg-rth" [control]="group().controls['puntoRetorno']">
-      <input id="seg-rth" class="campo-input" type="text" formControlName="puntoRetorno" placeholder="Lugar de retorno al inicio" />
+    <app-campo etiqueta="Punto de retorno (RTH) (opcional)" para="seg-rth" ayuda="Máximo 100 caracteres." [control]="group().controls['puntoRetorno']">
+      <input id="seg-rth" class="campo-input" type="text" formControlName="puntoRetorno" maxlength="100" placeholder="Ej.: Base de operaciones, vía a la torre 14" />
     </app-campo>
 
-    <app-campo class="col-2" etiqueta="Riesgos conocidos" para="seg-riesgos" [control]="group().controls['riesgos']">
-      <textarea id="seg-riesgos" class="campo-area" formControlName="riesgos" placeholder="Líneas energizadas, tráfico, personas cercanas, relieve u otros"></textarea>
+    <app-campo class="col-2" etiqueta="Riesgos conocidos (opcional)" para="seg-riesgos" ayuda="Máximo 500 caracteres." [control]="group().controls['riesgos']">
+      <textarea id="seg-riesgos" class="campo-area" formControlName="riesgos" maxlength="500" placeholder="Líneas energizadas, tráfico, personas cercanas, relieve u otros"></textarea>
     </app-campo>
 
     <div class="col-2">

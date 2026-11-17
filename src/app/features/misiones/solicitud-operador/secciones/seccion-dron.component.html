@@ -18,12 +18,12 @@
       </div>
     </fieldset>
 
-    <app-campo etiqueta="Modelo del dron (opcional)" para="dr-modelo" [control]="group().controls['modelo']">
-      <input id="dr-modelo" class="campo-input" type="text" formControlName="modelo" placeholder="Marca y modelo" />
+    <app-campo etiqueta="Modelo del dron (opcional)" para="dr-modelo" ayuda="Máximo 50 caracteres." [control]="group().controls['modelo']">
+      <input id="dr-modelo" class="campo-input" type="text" formControlName="modelo" maxlength="50" placeholder="Ej.: DJI Matrice 300 RTK" />
     </app-campo>
 
-    <app-campo etiqueta="Número de baterías" para="dr-bat" [control]="group().controls['numBaterias']">
-      <input id="dr-bat" class="campo-input" type="number" formControlName="numBaterias" placeholder="Cantidad" />
+    <app-campo etiqueta="Número de baterías" para="dr-bat" ayuda="Número entero entre 1 y 20." [control]="group().controls['numBaterias']">
+      <input id="dr-bat" class="campo-input" type="number" step="1" min="1" max="20" formControlName="numBaterias" />
     </app-campo>
 
     <fieldset class="col-2 campo-grupo">

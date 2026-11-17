@@ -1,6 +1,6 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { map } from 'rxjs';
 import {
@@ -12,6 +12,20 @@ import {
   esAltaTension,
 } from '../../../core/models/solicitud.model';
 import { SolicitudesService } from '../../../core/services/solicitudes.service';
+import {
+  LIMITES,
+  REGEX,
+  entero,
+  fechaNoLejana,
+  fechaNoPasada,
+  formato,
+  horaNoPasada,
+  longitud,
+  normalizarSolicitud,
+  parCoordenadas,
+  requerido,
+  unDecimal,
+} from '../../../core/validators/solicitud.validators';
 import { SeccionSolicitanteComponent } from './secciones/seccion-solicitante.component';
 import { SeccionMisionComponent } from './secciones/seccion-mision.component';
 import { SeccionUbicacionComponent } from './secciones/seccion-ubicacion.component';
@@ -25,15 +39,6 @@ interface ResultadoEnvio {
   estado: EstadoSolicitud;
   zona_critica: boolean;
   nivel_riesgo: NivelRiesgo;
-}
-
-/** La misión no puede programarse en una fecha anterior a hoy (hora local del navegador). */
-function fechaNoPasada(control: AbstractControl): ValidationErrors | null {
-  const valor = control.value as string;
-  if (!valor) return null;
-  const hoy = new Date();
-  const hoyTexto = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-  return valor < hoyTexto ? { fechaPasada: true } : null;
 }
 
 @Component({
@@ -150,6 +155,20 @@ export class SolicitudOperadorComponent {
     this.form.controls.mision.controls.tipoTarea.valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe((tarea) => this.sincronizarZonaCritica(tarea));
+
+      // Validaciones que dependen de otro campo: se revalidan cuando ese campo cambia
+    const m = this.form.controls.mision.controls;
+    const u = this.form.controls.ubicacion.controls;
+    m.fechaInicio.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => m.horaInicio.updateValueAndValidity());
+    // emitEvent:false evita que latitud y longitud se revaliden una a otra sin fin
+    u.latitud.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => u.longitud.updateValueAndValidity({ emitEvent: false }));
+    u.longitud.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => u.latitud.updateValueAndValidity({ emitEvent: false }));
   }
 
   /** Casilla deshabilitada = marcada por el sistema según el tipo de tarea. */
@@ -212,7 +231,8 @@ export class SolicitudOperadorComponent {
     this.enviando.set(true);
     this.errorEnvio.set(null);
 
-    const datos = this.form.getRawValue();
+ // Mismo formato para todos los datos: sin espacios sobrantes, correo en minúscula, licencia en mayúscula
+    const datos = normalizarSolicitud(this.form.getRawValue());
     const respuesta = await this.solicitudes.crear({
       ...datos,
       ubicacion: { ...datos.ubicacion, zonaCritica: this.altaTension() },
