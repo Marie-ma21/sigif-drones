@@ -14,40 +14,56 @@ export interface ResultadoAsignacion {
 
 @Injectable({ providedIn: 'root' })
 export class MisionesService {
-  private misionesMock: Mision[] = [
-    {
-      id: 89,
-      codigo_mision: 'MIS-2026-089',
-      nombre: 'Línea de transmisión eléctrica de 220 kV',
-      estado: 'PROGRAMADA',
-      nivel_riesgo: 'ALTO',
-      etiqueta_zona: 'Zona de Alta Tensión',
-    },
-    {
-      id: 90,
-      codigo_mision: 'MIS-2026-090',
-      nombre: 'Inspección Perimetral Sector Norte',
-      estado: 'PROGRAMADA',
-      nivel_riesgo: 'NORMAL',
-      etiqueta_zona: null,
-    },
-  ];
-
-  private historialMock: HistorialAsignacion[] = [];
+  private historialSimulado: HistorialAsignacion[] = [];
   private consecutivoMision = 91;
 
+  // ───────────────────────── Datos reales (Supabase) ─────────────────────────
+
   async listar(): Promise<Mision[]> {
-    return [...this.misionesMock];
+    const { data, error } = await supabase
+      .from('misiones')
+      .select('*')
+      .order('codigo_mision', { ascending: true });
+
+    if (error) throw error;
+    return (data ?? []) as Mision[];
   }
 
+  /**
+   * Intenta asignar un dron a una misión.
+   * Esta es la "segunda verificación" (backend) de CP-RF08-01: si el dron
+   * está en ROJO, la base de datos rechaza el INSERT con el mensaje de la
+   * regla RN-01, sin importar si el botón del frontend fue o no deshabilitado.
+   */
   async asignarDron(misionId: number, dronId: number): Promise<ResultadoAsignacion> {
     const { error } = await supabase
       .from('asignaciones_misiones')
       .insert({ mision_id: misionId, dron_id: dronId });
 
-    if (error) return { ok: false, mensajeError: error.message };
+    if (error) {
+      return { ok: false, mensajeError: error.message };
+    }
     return { ok: true };
   }
+
+  /**
+   * Últimas asignaciones realizadas, con el código del dron y de la misión
+   * ya resueltos (PostgREST "embeds" la fila relacionada por la FK).
+   * Sustenta la trazabilidad (RF-13) directamente desde esta pantalla.
+   */
+  async listarHistorial(limite = 8): Promise<HistorialAsignacion[]> {
+    const { data, error } = await supabase
+      .from('asignaciones_misiones')
+      .select('id, fecha_asignacion, drones(codigo), misiones(codigo_mision)')
+      .order('fecha_asignacion', { ascending: false })
+      .limit(limite);
+
+    if (error) throw error;
+    return (data ?? []) as unknown as HistorialAsignacion[];
+  }
+
+  // ─────────────── Flujo de aprobación simulado (en memoria) ───────────────
+  // Nada de esto se guarda en la base de datos. Se conserva tal cual estaba.
 
   async crearSolicitudCompleta(
     payload: SolicitudVueloPayload
@@ -70,7 +86,7 @@ export class MisionesService {
       .eq('id', payload.dronId)
       .single();
 
-    this.historialMock.unshift({
+    this.historialSimulado.unshift({
       id: Date.now(),
       fecha_asignacion: new Date().toISOString(),
       estado_aprobacion: estadoInicial,
@@ -101,7 +117,7 @@ export class MisionesService {
     }
 
     const token = `SIGIF-HV-${Date.now().toString(36).toUpperCase()}`;
-    const item = this.historialMock.find((h) => h.id === asignacionId);
+    const item = this.historialSimulado.find((h) => h.id === asignacionId);
     if (item) {
       item.estado_aprobacion = 'APROBADA';
       item.token_aprobacion = token;
@@ -130,7 +146,7 @@ export class MisionesService {
     };
   }
 
-  async listarHistorial(): Promise<HistorialAsignacion[]> {
-    return [...this.historialMock];
+  async listarHistorialSimulado(): Promise<HistorialAsignacion[]> {
+    return [...this.historialSimulado];
   }
 }
