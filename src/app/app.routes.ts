@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
 import { ShellComponent } from './layout/shell/shell.component';
+import { InicioComponent } from './features/inicio/inicio.component';
 import { AsignacionMisionComponent } from './features/misiones/asignacion-mision/asignacion-mision.component';
-import { SolicitudOperadorComponent } from './features/misiones/solicitud-operador/solicitud-operador';
 import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
@@ -12,6 +12,7 @@ export const routes: Routes = [
     path: '',
     component: ShellComponent,
     children: [
+      { path: '', pathMatch: 'full', component: InicioComponent },
       {
         path: 'misiones/asignacion',
         component: AsignacionMisionComponent,
@@ -29,7 +30,6 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/misiones/mis-solicitudes/mis-solicitudes.component').then((m) => m.MisSolicitudesComponent),
       },
-      { path: '', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
 

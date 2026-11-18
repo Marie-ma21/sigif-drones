@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-import { rutaInicial } from '../../../core/services/ruta-inicial';
 
 
 @Component({
@@ -54,6 +53,6 @@ export class LoginComponent {
     }
 
     // 4. Redirigimos según el rol obtenido
-    this.router.navigateByUrl(rutaInicial(rol!));
+    this.router.navigateByUrl('/');
   }
 }

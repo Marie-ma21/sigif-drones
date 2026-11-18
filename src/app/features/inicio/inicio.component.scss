@@ -1,0 +1,238 @@
+:host {
+  display: block;
+  --acento: var(--brand-blue, #1b4f80);
+  --borde: var(--border, #e3e8ef);
+  --texto: var(--text-main, #1c2733);
+  --apagado: var(--text-muted, #5f6b7a);
+}
+
+.portada {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ───────── Portada ───────── */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: 24px;
+  padding: clamp(24px, 5vw, 56px);
+  border: 1px solid var(--borde);
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--acento) 8%, #fff) 0%, #fff 62%);
+}
+
+.hero-texto > * {
+  animation: subir 0.5s ease both;
+
+  @for $i from 1 through 4 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 0.08}s;
+    }
+  }
+}
+
+.logo {
+  display: block;
+  width: 112px;
+  // Recorte 4:3 para quitar el margen blanco de la imagen, igual que en el menú
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-size: clamp(30px, 5vw, 46px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--acento);
+}
+
+.descripcion {
+  margin: 0 0 28px;
+  max-width: 46ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--apagado);
+}
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 12px;
+  background: var(--acento);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+
+  .icon {
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    background: color-mix(in srgb, var(--acento) 88%, #000);
+
+    .icon {
+      transform: translateX(3px);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--acento);
+    outline-offset: 3px;
+  }
+}
+
+/* ───────── Ilustración: ruta de vuelo ───────── */
+
+.hero-arte svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rejilla {
+  fill: none;
+  stroke: color-mix(in srgb, var(--acento) 12%, transparent);
+  stroke-width: 1;
+}
+
+.ruta-base {
+  fill: none;
+  stroke: color-mix(in srgb, var(--acento) 20%, transparent);
+  stroke-width: 2;
+}
+
+.ruta {
+  fill: none;
+  stroke: var(--acento);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 2 12;
+  animation: avance 1.4s linear infinite;
+}
+
+.punto {
+  fill: #fff;
+  stroke: var(--acento);
+  stroke-width: 3;
+}
+
+.destino {
+  fill: var(--acento);
+}
+
+.pulso {
+  fill: var(--acento);
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulso 2s ease-out infinite;
+}
+
+/* ───────── Puntos clave ───────── */
+
+.puntos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    padding: 18px 20px;
+    background: #fff;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: var(--texto);
+  }
+
+  span {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--apagado);
+  }
+}
+
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes avance {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+@keyframes pulso {
+  from {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(4);
+  }
+}
+
+/* ───────── Responsive ───────── */
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-arte svg {
+    max-height: 200px;
+  }
+}
+
+@media (max-width: 700px) {
+  .puntos {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+}

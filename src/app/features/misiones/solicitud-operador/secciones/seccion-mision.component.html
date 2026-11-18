@@ -52,8 +52,8 @@
       <input id="mis-hora" class="campo-input" type="time" formControlName="horaInicio" />
     </app-campo>
 
-    <app-campo etiqueta="Duración estimada (min)" para="mis-dur" ayuda="Número entero entre 5 y 240. Ej.: 45" [control]="group().controls['duracionMin']">
-      <input id="mis-dur" class="campo-input" type="number" step="1" min="5" max="240" formControlName="duracionMin" />
+    <app-campo etiqueta="Duración estimada (min)" para="mis-dur" ayuda="Número entero entre 5 y 240." [control]="group().controls['duracionMin']">
+      <input id="mis-dur" class="campo-input" type="number" step="1" min="5" max="240" formControlName="duracionMin" placeholder="Ej.: 45" />
     </app-campo>
   </div>
 </section>

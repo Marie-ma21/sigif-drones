@@ -7,7 +7,7 @@ export type EstadoSolicitud =
 
 export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO';
 
-/** Fila de la tabla solicitudes_mision (solo lo que muestra la pantalla). */
+/** Fila de la tabla solicitudes_mision */
 export interface Solicitud {
   id: number;
   codigo: string;
@@ -40,7 +40,6 @@ export interface Notificacion {
   creada_en: string;
 }
 
-/** Respuesta de las funciones de Postgres (enviar_a_gcs, aprobar_solicitud...). */
 export interface RespuestaRpc {
   ok: boolean;
   mensaje?: string;
@@ -48,7 +47,6 @@ export interface RespuestaRpc {
   token?: string;
 }
 
-/** Valores del formulario: misma estructura anidada que en pantalla. */
 export interface FormularioSolicitud {
   solicitante: {
     nombre: string;
@@ -95,13 +93,9 @@ export interface FormularioSolicitud {
 export const LIMITE_ALTITUD_M = 120;
 export const LIMITE_VIENTO_KMH = 35;
 
-/** Tareas que el servidor trata automáticamente como zona de alta tensión. */
 export const TAREAS_ALTA_TENSION = ['Inspección de torres eléctricas'];
 
-/**
- * Vista previa de la detección de "Zona de Alta Tensión" (paso 2 de CP-RF03-01).
- * La decisión definitiva la toma el trigger de la base de datos con esta misma regla.
- */
+
 export function esAltaTension(tipoTarea: string, zonaCriticaMarcada: boolean): boolean {
   return zonaCriticaMarcada || TAREAS_ALTA_TENSION.includes(tipoTarea);
 }

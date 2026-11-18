@@ -28,7 +28,6 @@ export class MisSolicitudesComponent implements OnInit {
 
   readonly errorCarga = signal<string | null>(null);
   readonly enviandoId = signal<number | null>(null);
-  /** Mensaje por solicitud (bloqueo o éxito), para mostrarlo bajo la fila correcta. */
   readonly mensajes = signal<Record<number, { texto: string; tipo: 'bloqueo' | 'ok' }>>({});
 
   readonly kpis = computed(() => {

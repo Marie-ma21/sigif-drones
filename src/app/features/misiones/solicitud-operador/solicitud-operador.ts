@@ -135,10 +135,7 @@ export class SolicitudOperadorComponent {
     initialValue: this.form.getRawValue(),
   });
 
-  /**
-   * Paso 2 de CP-RF03-01: el sistema detecta la "Zona de Alta Tensión" por el tipo de tarea
-   * o porque el operador marcó la zona crítica. El servidor vuelve a decidirlo con la misma regla.
-   */
+
   readonly altaTension = computed(() =>
     esAltaTension(this.valor().mision.tipoTarea, this.valor().ubicacion.zonaCritica),
   );
@@ -162,7 +159,6 @@ export class SolicitudOperadorComponent {
     m.fechaInicio.valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(() => m.horaInicio.updateValueAndValidity());
-    // emitEvent:false evita que latitud y longitud se revaliden una a otra sin fin
     u.latitud.valueChanges
       .pipe(takeUntilDestroyed())
       .subscribe(() => u.longitud.updateValueAndValidity({ emitEvent: false }));
@@ -214,13 +210,11 @@ export class SolicitudOperadorComponent {
   async enviar(): Promise<void> {
     if (this.enviando()) return;
 
-    // Enter en un campo de un paso intermedio avanza; no envía
     if (this.pasoActual() < this.ultimoPaso) {
       this.siguiente();
       return;
     }
 
-    // Si algún paso quedó inválido (p. ej. se editó uno anterior), vuelve a ese paso
     const invalido = this.pasos.findIndex((p) => this.form.controls[p.clave].invalid);
     if (invalido >= 0) {
       this.pasoActual.set(invalido);
@@ -231,7 +225,6 @@ export class SolicitudOperadorComponent {
     this.enviando.set(true);
     this.errorEnvio.set(null);
 
- // Mismo formato para todos los datos: sin espacios sobrantes, correo en minúscula, licencia en mayúscula
     const datos = normalizarSolicitud(this.form.getRawValue());
     const respuesta = await this.solicitudes.crear({
       ...datos,
@@ -245,7 +238,6 @@ export class SolicitudOperadorComponent {
       return;
     }
 
-    // Registrada: se limpia todo de inmediato para que no pueda reenviarse lo mismo
     this.resultado.set(respuesta.solicitud);
     this.reiniciarFormulario();
   }
