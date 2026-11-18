@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 /* Estilos globales SIGIF-Drones */
 
 :root {
@@ -40,4 +39,211 @@ html, body {
 
 button {
   font-family: inherit;
+}
+
+
+//NUEVO
+
+/* ============================================================
+   Formulario de solicitud de misión (operador)
+   ============================================================ */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 18px;
+
+  h2 { font-size: 15px; margin: 0 0 4px; }
+}
+
+.form-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0 0 18px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.col-2 { grid-column: 1 / -1; }
+
+app-campo { display: block; }
+
+.campo-grupo { border: 0; margin: 0; padding: 0; min-width: 0; }
+
+.campo-etiqueta {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.campo-input,
+.campo-area {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+
+  &:focus { outline: none; border-color: var(--brand-blue); }
+  &.ng-invalid.ng-touched { border-color: var(--rojo-bg); }
+}
+
+.campo-area { min-height: 90px; resize: vertical; }
+
+.campo-ayuda { font-size: 11.5px; color: var(--text-muted); margin: 6px 0 0; }
+.campo-error { font-size: 12px; color: var(--rojo-bg); margin: 6px 0 0; }
+
+.fila-opciones { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13.5px;
+  background: #fff;
+  cursor: pointer;
+
+  input { accent-color: var(--brand-blue); }
+  &:has(:checked) { border-color: var(--brand-blue); background: #e8f1fc; }
+}
+
+.opcion-dron {
+  flex: 1 1 200px;
+  align-items: flex-start;
+
+  strong { display: block; }
+  small { display: block; color: var(--text-muted); margin-top: 2px; }
+}
+
+.aviso-critico {
+  background: #fff4d6;
+  border: 1px solid var(--amarillo-bg);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-principal {
+  padding: 11px 22px;
+  border-radius: 8px;
+  border: none;
+  background: var(--brand-blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:disabled { background: #c7ccd6; color: #767e8c; cursor: not-allowed; }
+}
+
+.btn-secundario {
+  padding: 11px 22px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+
+  &:hover { background: var(--bg-app); }
+}
+
+@media (max-width: 860px) {
+  .form-grid { grid-template-columns: 1fr; }
+}
+
+/* Etiqueta de detección automática (paso 2 de CP-RF03-01) */
+.etiqueta-alta-tension {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--amarillo-bg);
+  color: #1f2430;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.estado-resultado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 13.5px;
+}
+
+/* Indicador de pasos del formulario */
+.pasos {
+  margin-bottom: 8px;
+
+  ol {
+    display: flex;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li { flex: 1 1 0; min-width: 0; }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text-muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:disabled { cursor: not-allowed; opacity: 0.6; }
+  }
+
+  .num {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--bg-app);
+    font-size: 11.5px;
+  }
+
+  .titulo-paso { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  li.completo button { color: var(--text-main); .num { background: var(--verde-bg); color: #fff; } }
+  li.activo button { border-color: var(--brand-blue); color: var(--brand-blue); .num { background: var(--brand-blue); color: #fff; } }
+}
+
+.paso-texto { font-size: 12px; color: var(--text-muted); margin: 0 0 14px; }
+
+@media (max-width: 860px) {
+  .pasos .titulo-paso { display: none; }
 }

@@ -1,0 +1,20 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>6. Confirmación</h2>
+  <p class="form-sub">Revise la información antes de enviar.</p>
+
+  <label class="opcion">
+    <input type="checkbox" formControlName="aceptaCondiciones" />
+    Acepto las condiciones de uso y declaro que la información es veraz
+  </label>
+  @if (sinAceptar) {
+    <p class="campo-error" role="alert">Debe aceptar las condiciones para enviar la solicitud.</p>
+  }
+
+  <div class="acciones">
+    <button type="button" class="btn-secundario" (click)="cancelar.emit()">Cancelar</button>
+    <button type="button" class="btn-secundario" (click)="anterior.emit()">Anterior</button>
+    <button type="submit" class="btn-principal" [disabled]="enviando()">
+      {{ enviando() ? 'Enviando...' : 'Enviar solicitud' }}
+    </button>
+  </div>
+</section>

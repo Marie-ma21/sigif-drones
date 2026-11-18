@@ -1,0 +1,67 @@
+<section class="portada">
+  <div class="hero">
+    <div class="hero-texto">
+      <img class="logo" src="assets/logo-sigif-drones.png" alt="Logo SIGIF-Drones" />
+      <h1>SIGIF-Drones</h1>
+      <p class="descripcion">
+        Plataforma para solicitar, aprobar y supervisar misiones de drones en instalaciones
+        industriales. Las misiones en zonas de alta tensión requieren la firma digital del
+        Coordinador de Operaciones.
+      </p>
+
+      <div class="acciones">
+        @if (!auth.profile()) {
+          <a class="cta" routerLink="/login">
+            Iniciar sesión
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        } @else if (destino()) {
+          <a class="cta" [routerLink]="destino()">
+            Ir a mi panel
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        }
+      </div>
+    </div>
+
+    <!-- Ilustración decorativa: una ruta de vuelo con puntos de paso -->
+    <div class="hero-arte" aria-hidden="true">
+      <svg viewBox="0 0 400 300">
+        <defs>
+          <pattern id="rejilla" width="32" height="32" patternUnits="userSpaceOnUse">
+            <path class="rejilla" d="M32 0H0V32" />
+          </pattern>
+        </defs>
+        <rect width="400" height="300" fill="url(#rejilla)" />
+        <path class="ruta-base" d="M24 252 C 96 252, 96 160, 168 160 S 256 70, 312 98 S 372 176, 380 48" />
+        <path class="ruta" d="M24 252 C 96 252, 96 160, 168 160 S 256 70, 312 98 S 372 176, 380 48" />
+        <circle class="punto" cx="24" cy="252" r="6" />
+        <circle class="punto" cx="168" cy="160" r="6" />
+        <circle class="punto" cx="312" cy="98" r="6" />
+        <circle class="pulso" cx="380" cy="48" r="6" />
+        <circle class="destino" cx="380" cy="48" r="6" />
+      </svg>
+    </div>
+  </div>
+
+  <ul class="puntos">
+    <li>
+      <strong>Solicitud por pasos</strong>
+      <span>El operador registra la misión con datos validados y nivel de riesgo.</span>
+    </li>
+    <li>
+      <strong>Aprobación con firma digital</strong>
+      <span>El Coordinador autoriza las misiones en zonas de alta tensión.</span>
+    </li>
+    <li>
+      <strong>Seguimiento</strong>
+      <span>Cada operador consulta el estado de sus solicitudes.</span>
+    </li>
+  </ul>
+</section>

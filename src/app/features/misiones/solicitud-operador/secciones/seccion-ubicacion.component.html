@@ -1,0 +1,52 @@
+<section class="form-card" [formGroup]="group()">
+  <h2>3. Ubicación</h2>
+  <p class="form-sub">Dónde se realizará el vuelo.</p>
+
+  <div class="form-grid">
+    <app-campo
+      class="col-2"
+      etiqueta="Nombre del sitio"
+      para="ubi-sitio"
+      ayuda="Entre 3 y 100 caracteres."
+      [control]="group().controls['sitio']"
+    >
+      <input id="ubi-sitio" class="campo-input" type="text" formControlName="sitio" maxlength="100" placeholder="Ej.: Torre 14 - Tramo San Gil" />
+    </app-campo>
+
+    <app-campo etiqueta="Latitud (opcional)" para="ubi-lat" ayuda="Entre -90 y 90." [control]="group().controls['latitud']">
+      <input id="ubi-lat" class="campo-input" type="number" step="any" formControlName="latitud" placeholder="Ej.: 6.5545" />
+    </app-campo>
+
+    <app-campo etiqueta="Longitud (opcional)" para="ubi-lon" ayuda="Entre -180 y 180." [control]="group().controls['longitud']">
+      <input id="ubi-lon" class="campo-input" type="number" step="any" formControlName="longitud" placeholder="Ej.: -73.1347" />
+    </app-campo>
+
+    <app-campo
+      etiqueta="Altitud máxima de vuelo (m)"
+      para="ubi-alt"
+      [ayuda]="'Entre 1 y ' + limiteAltitud + ' m, máximo un decimal.'"
+      [control]="group().controls['altitudMaxM']"
+    >
+      <input id="ubi-alt" class="campo-input" type="number" formControlName="altitudMaxM" [placeholder]="'Hasta ' + limiteAltitud" />
+    </app-campo>
+
+    <div class="col-2">
+      <label class="opcion">
+        <input type="checkbox" formControlName="zonaCritica" />
+        Zona crítica (alta tensión)
+      </label>
+      @if (group().controls['zonaCritica'].disabled) {
+        <p class="campo-ayuda">Marcada automáticamente por el tipo de tarea seleccionado.</p>
+      }
+    </div>
+
+    @if (altaTension()) {
+      <div class="col-2 aviso-critico" role="status">
+        <span class="etiqueta-alta-tension">Zona de Alta Tensión</span>
+        <strong>Nivel de riesgo: ALTO. Aprobación obligatoria.</strong>
+        Las misiones en zonas críticas no pueden enviarse a la GCS hasta contar con la aprobación
+        con firma digital del Coordinador de Operaciones.
+      </div>
+    }
+  </div>
+</section>

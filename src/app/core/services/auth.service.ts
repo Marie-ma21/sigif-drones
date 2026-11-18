@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Session } from '@supabase/supabase-js';
 import { supabase } from './supabase-client';
-import { Profile } from '../models/profile.model';
+import { Profile, Rol } from '../models/profile.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -47,10 +47,29 @@ export class AuthService {
     }
     this.cargandoSesion.set(false);
   }
+  
+    async iniciarSesion(
+    email: string,
+    password: string,
+  ): Promise<{ error: string | null; rol?: Rol; sinPerfil?: boolean }> {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error || !data.user) {
+      return { error: error?.message ?? 'No fue posible iniciar sesión.' };
+    }
 
-  async iniciarSesion(email: string, password: string): Promise<{ error: string | null }> {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+    const { data: perfil, error: errorPerfil } = await supabase
+      .from('profiles')
+      .select('id, nombre_completo, rol')
+      .eq('id', data.user.id)
+      .single();
+
+    if (errorPerfil || !perfil) {
+      await supabase.auth.signOut();
+      return { error: 'Sin perfil', sinPerfil: true };
+    }
+
+    this.profile.set(perfil as Profile);
+    return { error: null, rol: (perfil as Profile).rol };
   }
 
   async cerrarSesion(): Promise<void> {
